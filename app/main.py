@@ -17,6 +17,8 @@ app.include_router(logs_router)
 
 
 
+
+
 @app.get("/database-info")
 def database_info():
     return {
