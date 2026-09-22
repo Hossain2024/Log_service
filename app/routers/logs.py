@@ -1,10 +1,12 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_database
 from app.models.log import Log
 from app.repositories import log_repository
-from app.schemas.log import LogCreate, LogResponse
+from app.schemas.log import LogCreate, LogLevel, LogResponse
 from app.services import log_service
 
 
@@ -46,3 +48,21 @@ def get_log(
         )
 
     return existing_log
+
+
+
+@router.get(
+    "",
+    response_model=List[LogResponse],
+    status_code=status.HTTP_200_OK
+)
+def get_logs(
+    service_name: Optional[str] = None,
+    level: Optional[LogLevel] = None,
+    database: Session = Depends(get_database)
+):
+    return log_service.get_logs(
+        database=database,
+        service_name=service_name,
+        level=level.value if level is not None else None
+    )

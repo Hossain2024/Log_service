@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -32,4 +34,16 @@ def create_log(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Log '{log_data.log_id}' already exists"
         )
+
+
+def get_logs(
+    database: Session,
+    service_name: Optional[str] = None,
+    level: Optional[str] = None
+) -> List[Log]:
+    return log_repository.get_logs(
+        database=database,
+        service_name=service_name,
+        level=level
+    )
     

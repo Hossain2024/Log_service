@@ -21,3 +21,4 @@ class LogCreate(BaseModel):
 
 class LogResponse(LogCreate):
     model_config = ConfigDict(from_attributes=True)
+

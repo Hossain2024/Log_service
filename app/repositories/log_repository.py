@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -15,7 +15,28 @@ def get_log_by_id(
         .filter(Log.log_id == log_id)
         .first()
     )
+def get_logs(
+    database: Session,
+    service_name: Optional[str] = None,
+    level: Optional[str] = None
+) -> List[Log]:
+    query = database.query(Log)
 
+    if service_name is not None:
+        query = query.filter(
+            Log.service_name == service_name
+        )
+
+    if level is not None:
+        query = query.filter(
+            Log.level == level
+        )
+
+    return (
+        query
+        .order_by(Log.timestamp.desc())
+        .all()
+    )
 
 def create_log(
     database: Session,
